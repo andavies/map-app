@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title> Mapp App </title>
+
+		<link rel="stylesheet" href="css/custom.css">
+
+		<!-- set viewport -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!-- disable zooming -->
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+		<!-- load google maps object (no api key required, for now), with Places library for search functionality -->
+		<script src="https://maps.googleapis.com/maps/api/js?libraries=places" type="text/javascript"></script>
+	</head>
+
+
+
+	<body>
+		    
+		<!--search box -->
+		<input id="searchbox" type="text" placeholder="Search for a place">
+
+		<div id="map"></div>
+			<!-- load map functionality js file -->
+			<script type="text/javascript" src="js/map.js"></script>
+		</div>
+
+		<div>
+			<p>
+				This web application uses the Google maps API and the <a href="https://data.police.uk/docs/">police.uk data API</a> to show recent
+				stop search data by location.
+			</p>
+			<br>
+			<p>
+				Once the user has entered a search location, the map centers on that area and retrieves stop search data asynchronously. You can see my code here (***NEED TO ADD TO GITHUB*****).
+			</p>
+		</div>
+	</body>
+
+</html>
