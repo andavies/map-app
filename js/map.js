@@ -13,28 +13,21 @@ var initOptions = {
 // Create a new map object in global scope (for access) and add to #map div
 var map = new google.maps.Map(document.getElementById('map'), initOptions);	
 
+// create new search box object and assign to #searchbox <input>
+var input = document.getElementById('searchbox');
+var searchBox = new google.maps.places.SearchBox(input);
 
-addSearchBox();
+// bias searchbox results towards current map bounds,
+map.addListener('bounds_changed', function() {
+	searchBox.setBounds(map.getBounds());
+});
+
 addSearchListener(searchBox);
 
 
 
 
-function addSearchBox() {
-	// create new search box object and assign to #searchbox <input>
-	var input = document.getElementById('searchbox');
-	// (searchBox in global scope)
-	searchBox = new google.maps.places.SearchBox(input);
 
-	// move search box to top left of map (COMMENTED OUT FOR NOW)
-	// map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-	/* bias searchbox results towards current map bounds,
-		by setting the 'bounds' of the searchbox equal to the bounds of the map */
-	map.addListener('bounds_changed', function() {
-		searchBox.setBounds(map.getBounds());
-	});	
-}
 
 function addSearchListener(searchBox) {
 	// listen for user selecting place
