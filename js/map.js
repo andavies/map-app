@@ -1,13 +1,24 @@
 /*-----------------------------------------------------------------------------------------*/
+/* MODEL */
+
+// set initial options for map
+var initOptions = {
+	center : {lat : 53.328, lng: -3.101995},
+	zoom : 8
+};
+
+/*-----------------------------------------------------------------------------------------*/
 /* CONTROLLER */
 
-// map in global scope for access
-var map;
+// Create a new map object in global scope (for access) and add to #map div
+var map = new google.maps.Map(document.getElementById('map'), initOptions);	
 
-function initMap() {
-	// Create a new map object and add to #map div
-	map = new google.maps.Map(document.getElementById('map'), initOptions);	
-}
+
+addSearchBox();
+addSearchListener(searchBox);
+
+
+
 
 function addSearchBox() {
 	// create new search box object and assign to #searchbox <input>
@@ -18,7 +29,8 @@ function addSearchBox() {
 	// move search box to top left of map (COMMENTED OUT FOR NOW)
 	// map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-	// bias searchbox results towards current map bounds
+	/* bias searchbox results towards current map bounds,
+		by setting the 'bounds' of the searchbox equal to the bounds of the map */
 	map.addListener('bounds_changed', function() {
 		searchBox.setBounds(map.getBounds());
 	});	
@@ -137,20 +149,8 @@ function addStopsMarkers(stops) {
 	}
 }
 
-/*-----------------------------------------------------------------------------------------*/
-/* MODEL */
 
-var initOptions = {
-	center : {lat : 53.328, lng: -3.101995},
-	zoom : 8
-};
 
-/*---------------------------------------------------------------------------------------*/
-/* VIEW */
-
-initMap();
-addSearchBox();
-addSearchListener(searchBox);
 
 
 
