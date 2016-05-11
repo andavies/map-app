@@ -21,11 +21,7 @@ function addSearchBox() {
 	// bias searchbox results towards current map bounds
 	map.addListener('bounds_changed', function() {
 		searchBox.setBounds(map.getBounds());
-	});
-
-
-
-	addSearchListener(searchBox);
+	});	
 }
 
 function addSearchListener(searchBox) {
@@ -154,6 +150,7 @@ var initOptions = {
 
 initMap();
 addSearchBox();
+addSearchListener(searchBox);
 
 
 
