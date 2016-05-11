@@ -7,6 +7,9 @@ var initOptions = {
 	zoom : 8
 };
 
+// zoom level once a place is searched for (street level)
+var streetZoom = 15
+
 /*-----------------------------------------------------------------------------------------*/
 /* CONTROLLER */
 
@@ -22,14 +25,37 @@ map.addListener('bounds_changed', function() {
 	searchBox.setBounds(map.getBounds());
 });
 
-addSearchListener(searchBox);
+// listen for user entering a search
+searchBox.addListener('places_changed', function() {
+
+	// when they do, getPlaces returns an array of possible matches
+	var places = searchBox.getPlaces();
+
+	// TEST
+	console.log(places);
+	console.log(places[0].geometry.viewport);
+	console.log("NEWTEST: " + places[0].geometry.location);
+
+	// TODO: why places[0]? Will this be the correct place every time?
+
+	// TODO: need error checking here. Maybe test if ...geometry.location exists
+
+	// set viewport on selected place and zoom in
+	map.setCenter(places[0].geometry.location);
+	map.setZoom(streetZoom);
+
+	// TODO: LEFT OFF HERE. ADD PLACE MARKER FOR NEW PLACE? OR GO STRAIGHT TO CALLING API?
+
+})
+
+// addSearchListener(searchBox);
 
 
 
 
 
 
-function addSearchListener(searchBox) {
+/*function addSearchListener(searchBox) {
 	// listen for user selecting place
 	searchBox.addListener('places_changed', function() {
 		// getPlaces() return an ARRAY of possible matches
@@ -64,7 +90,7 @@ function addSearchListener(searchBox) {
 		// get stop/search data from api
 		getStopsData();
 	});
-}
+} */
 
 function addMarker(markerOptions) {
 	marker = new google.maps.Marker(markerOptions);
