@@ -6,10 +6,7 @@ var map;
 
 function initMap() {
 	// Create a new map object and add to #map div
-	map = new google.maps.Map(document.getElementById('map'), initOptions);
-
-	// add search box
-	addSearchBox();
+	map = new google.maps.Map(document.getElementById('map'), initOptions);	
 }
 
 function addSearchBox() {
@@ -156,6 +153,7 @@ var initOptions = {
 /* VIEW */
 
 initMap();
+addSearchBox();
 
 
 
