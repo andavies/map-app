@@ -13,14 +13,20 @@ function initMap() {
 }
 
 function addSearchBox() {
+	// create new search box object and assign to #searchbox <input>
 	var input = document.getElementById('searchbox');
-	var searchBox = new google.maps.places.SearchBox(input);
-	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+	// (searchBox in global scope)
+	searchBox = new google.maps.places.SearchBox(input);
+
+	// move search box to top left of map (COMMENTED OUT FOR NOW)
+	// map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
 	// bias searchbox results towards current map bounds
 	map.addListener('bounds_changed', function() {
 		searchBox.setBounds(map.getBounds());
 	});
+
+
 
 	addSearchListener(searchBox);
 }
@@ -150,3 +156,13 @@ var initOptions = {
 /* VIEW */
 
 initMap();
+
+
+
+
+/*---------------------------------*/
+/* TEST: can we use this later for recalculating not just when user searches,
+	   but when user moves map bounds? */
+map.addListener('bounds_changed', function() {
+	console.log(searchBox.getBounds());
+})
