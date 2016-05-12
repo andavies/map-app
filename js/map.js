@@ -30,7 +30,7 @@ var redIcon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
 var blueIcon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
 
 // array of markers to add to when police API called
-//var	stopMarkers = [];
+var	stopMarkers = [];
 
 
 /*-----------------------------------------------------------------------------------------*/
@@ -66,7 +66,9 @@ searchBox.addListener('places_changed', function() {
 })
 
 // map listens for boundaries being changed (when user scrolls map OR when changed via search as above)
-map.addListener('bounds_changed', function() {
+/* use 'idle' instead of 'bounds_changed'
+   https://developers.google.com/maps/articles/toomanymarkers#viewportmarkermanagement */
+map.addListener('idle', function() {
 	
 	// query API, but not if map zoomed out too much - to prevent too many data	
 	if (map.zoom <= minimum_zoom) {
