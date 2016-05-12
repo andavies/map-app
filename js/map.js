@@ -4,7 +4,7 @@
 // set initial options for map
 var initOptions = {
 	center : {lat : 53.328, lng: -3.101995},
-	zoom : 8
+	zoom : 15
 };
 
 // zoom level once a place is searched for (street level)
@@ -50,21 +50,10 @@ searchBox.addListener('places_changed', function() {
 	map.setZoom(streetZoom);
 
 	// add place marker for selected place
-	searchMarker = addMarker(place.geometry.location, redIcon);	
-
-	// query API
-	getStopsData();
-
+	var searchMarker = addMarker(place.geometry.location, redIcon);	
 })
 
-function addMarker(location, icon) {
-	var markerOptions = {
-		map : map,
-		position : location,
-		icon: icon
-	};
-	return new google.maps.Marker(markerOptions);	
-}
+
 
 // when bounds change (when user scrolls map OR when changed via search as above)
 map.addListener('bounds_changed', function() {
@@ -89,7 +78,35 @@ function getStopsData() {
 	console.log(min_lat, min_lng, max_lat, max_lng);
 	//console.log(place.geometry.viewport);
 
-	// TODO: TEST THAT THESE ARE THE CORRECT BOUNDS BY ADDING MARKERS AT THE BOUNDARY COORDS
+	/* TEST: add markers at boundary points
+	addMarker(current_bounds.getSouthWest(), blueIcon);
+	addMarker(current_bounds.getNorthEast(), blueIcon); */
+
+	// form search string for API request (https://data.police.uk/docs/method/stops-street/)
+	var poly_1 = min_lat.toString() + ',' + min_lng.toString() + ':';
+	var poly_2 = min_lat.toString() + ',' + max_lng.toString() + ':';
+	var poly_3 = max_lat.toString() + ',' + max_lng.toString() + ':'; 
+	var poly_4 = max_lat.toString() + ',' + min_lng.toString();
+	var query = 'https://data.police.uk/api/stops-street?poly=' + poly_1 + poly_2 + poly_3 + poly_4;
+
+	// test query string
+	console.log(query);
+
+	// query API. Creates JSON object of 'stops'
+	var stops;
+	var request = new XMLHttpRequest();
+	request.open("GET", query); // async by default
+	request.addEventListener("load", function() {
+		// once loaded, do this..
+
+		stops = JSON.parse(request.responseText);
+
+		// test
+		//console.log(stops);
+
+		addStopsMarkers(stops);
+	});
+	request.send(null);
 
 	
 }
@@ -179,6 +196,7 @@ function getStopsData() {
 	var poly_2 = min_lat.toString() + ',' + max_lng.toString() + ':';
 	var poly_3 = max_lat.toString() + ',' + max_lng.toString(); // 4th poly not required as per documentation
 	var query = 'https://data.police.uk/api/stops-street?poly=' + poly_1 + poly_2 + poly_3;
+
 	var stops;
 
 	var request = new XMLHttpRequest();
@@ -196,20 +214,27 @@ function getStopsData() {
 	request.send(null);
 } */
 
+function addMarker(location, icon) {
+	var markerOptions = {
+		map : map,
+		position : location,
+		icon: icon
+	};
+	return new google.maps.Marker(markerOptions);	
+}
+
 function addStopsMarkers(stops) {
-	//test
-	console.log(stops);
 	for (stop of stops) {
-		// test
-		console.log(stop);
-		var markerOptions = {};
-		markerOptions.position = {
-			lat: Number(stop.location.latitude),
+		
+		// TODO: markerOptions.animation = google.maps.Animation.DROP;
+		
+
+		var stopLocation = {
+			lat : Number(stop.location.latitude), 
 			lng: Number(stop.location.longitude)
 		};
-		markerOptions.animation = google.maps.Animation.DROP;
-		markerOptions.map = map;
-		addMarker(markerOptions);
+
+		addMarker(stopLocation, blueIcon);
 
 	}
 }
