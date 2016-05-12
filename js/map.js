@@ -20,6 +20,9 @@ var blueIcon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
 // Create a new map object in global scope (for access) and add to #map div
 var map = new google.maps.Map(document.getElementById('map'), initOptions);	
 
+// array of markers to add to
+var	stopMarkers = [];
+
 // create new search box object and assign to #searchbox <input>
 var input = document.getElementById('searchbox');
 var searchBox = new google.maps.places.SearchBox(input);
@@ -66,6 +69,16 @@ map.addListener('bounds_changed', function() {
 })
 
 function getStopsData() {
+	// clear previous stop markers to stop overloading
+	for (var i = 0; i < stopMarkers.length; i++) {
+		// remove map reference from each marker
+    	stopMarkers[i].setMap(null);
+    } 
+    // clear array of markers altogether
+	stopMarkers = [];
+
+	
+
 	// get current bounds from getBounds object
 	var current_bounds = map.getBounds();
 	var min_lat = current_bounds.getSouthWest().lat();
@@ -93,7 +106,6 @@ function getStopsData() {
 	console.log(query);
 
 	// query API. Creates JSON object of 'stops'
-	var stops;
 	var request = new XMLHttpRequest();
 	request.open("GET", query); // async by default
 	request.addEventListener("load", function() {
@@ -234,7 +246,9 @@ function addStopsMarkers(stops) {
 			lng: Number(stop.location.longitude)
 		};
 
-		addMarker(stopLocation, blueIcon);
+		
+
+		stopMarkers.push(addMarker(stopLocation, blueIcon));
 
 	}
 }
