@@ -10,6 +10,10 @@ var initOptions = {
 // zoom level once a place is searched for (street level)
 var streetZoom = 15
 
+// color of icons
+var redIcon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+var blueIcon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+
 /*-----------------------------------------------------------------------------------------*/
 /* CONTROLLER */
 
@@ -35,9 +39,9 @@ searchBox.addListener('places_changed', function() {
 	var place = places[0];
 
 	// TESTS
-	console.log(places);
-	console.log(place.geometry.viewport);
-	console.log("NEWTEST: " + place.geometry.location);	
+	//console.log(places);
+	//console.log(place.geometry.viewport);
+	//console.log("NEWTEST: " + place.geometry.location);	
 
 	// TODO: need error checking here. Maybe test if ...geometry.location exists
 
@@ -46,14 +50,49 @@ searchBox.addListener('places_changed', function() {
 	map.setZoom(streetZoom);
 
 	// add place marker for selected place
-	var searchMarkerOptions = {
-		map : map,
-		title : place.formatted_address,
-		position : place.geometry.location
-	};
-	var searchMarker = new google.maps.Marker(searchMarkerOptions);
+	searchMarker = addMarker(place.geometry.location, redIcon);	
+
+	// query API
+	getStopsData();
 
 })
+
+function addMarker(location, icon) {
+	var markerOptions = {
+		map : map,
+		position : location,
+		icon: icon
+	};
+	return new google.maps.Marker(markerOptions);	
+}
+
+// when bounds change (when user scrolls map OR when changed via search as above)
+map.addListener('bounds_changed', function() {
+	
+	// query API
+	getStopsData()
+
+	// TEST
+	//console.log(map.getBounds().getSouthWest().lat());
+})
+
+function getStopsData() {
+	// get current bounds from getBounds object
+	var current_bounds = map.getBounds();
+	var min_lat = current_bounds.getSouthWest().lat();
+	var min_lng = current_bounds.getSouthWest().lng();
+	var max_lat = current_bounds.getNorthEast().lat();
+	var max_lng = current_bounds.getNorthEast().lng();
+
+	// TEST
+	//console.log(current_bounds);
+	console.log(min_lat, min_lng, max_lat, max_lng);
+	//console.log(place.geometry.viewport);
+
+	// TODO: TEST THAT THESE ARE THE CORRECT BOUNDS BY ADDING MARKERS AT THE BOUNDARY COORDS
+
+	
+}
 
 // addSearchListener(searchBox);
 
@@ -99,7 +138,7 @@ searchBox.addListener('places_changed', function() {
 	});
 } */
 
-function addMarker(markerOptions) {
+/*function addMarker(markerOptions) {
 	marker = new google.maps.Marker(markerOptions);
 	var marker = new google.maps.Marker(markerOptions);
 
@@ -125,9 +164,9 @@ function addMarker(markerOptions) {
 	marker.addListener('click', function() {
 		infowindow.open(map, marker);
 	})
-};
+}; */
 
-function getStopsData() {
+/*function getStopsData() {
 	// get current bounds from getBounds object
 	var current_bounds = map.getBounds();
 	var min_lat = current_bounds.R.R;
@@ -155,7 +194,7 @@ function getStopsData() {
 		addStopsMarkers(stops);
 	});
 	request.send(null);
-}
+} */
 
 function addStopsMarkers(stops) {
 	//test
@@ -181,9 +220,4 @@ function addStopsMarkers(stops) {
 
 
 
-/*---------------------------------*/
-/* TEST: can we use this later for recalculating not just when user searches,
-	   but when user moves map bounds? */
-map.addListener('bounds_changed', function() {
-	console.log(searchBox.getBounds());
-})
+
