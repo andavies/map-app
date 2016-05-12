@@ -31,20 +31,27 @@ searchBox.addListener('places_changed', function() {
 	// when they do, getPlaces returns an array of possible matches
 	var places = searchBox.getPlaces();
 
-	// TEST
-	console.log(places);
-	console.log(places[0].geometry.viewport);
-	console.log("NEWTEST: " + places[0].geometry.location);
+	// select places[0] TODO: why? will this be correct every time?
+	var place = places[0];
 
-	// TODO: why places[0]? Will this be the correct place every time?
+	// TESTS
+	console.log(places);
+	console.log(place.geometry.viewport);
+	console.log("NEWTEST: " + place.geometry.location);	
 
 	// TODO: need error checking here. Maybe test if ...geometry.location exists
 
 	// set viewport on selected place and zoom in
-	map.setCenter(places[0].geometry.location);
+	map.setCenter(place.geometry.location);
 	map.setZoom(streetZoom);
 
-	// TODO: LEFT OFF HERE. ADD PLACE MARKER FOR NEW PLACE? OR GO STRAIGHT TO CALLING API?
+	// add place marker for selected place
+	var searchMarkerOptions = {
+		map : map,
+		title : place.formatted_address,
+		position : place.geometry.location
+	};
+	var searchMarker = new google.maps.Marker(searchMarkerOptions);
 
 })
 
