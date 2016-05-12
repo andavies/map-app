@@ -141,6 +141,12 @@ function addMarker(location, icon) {
 		position : location,
 		icon: icon
 	};
+
+	// animate marker if blue (therefore a stop)
+	if (icon === blueIcon) {
+		markerOptions.animation = google.maps.Animation.DROP;
+	}
+
 	return new google.maps.Marker(markerOptions);	
 }
 
