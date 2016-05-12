@@ -1,7 +1,16 @@
+/* 
+ * map.js
+ * andy davies
+ *
+ * Creates a Google Map in index.html, listens for user searching or scrolling,
+ * then queries police.uk API and plots markers showing stop/search data.
+ *
+ */
+
 /*-----------------------------------------------------------------------------------------*/
 /* MODEL */
 
-// set initial options for map
+// initial options for map
 var initOptions = {
 	center : {lat : 53.328, lng: -3.101995},
 	zoom : 15
@@ -11,7 +20,7 @@ var initOptions = {
 var streetZoom = 15
 
 // minimum (widest) zoom for stops API to be called (prevents too wide an area returning too much data)
-var minimum_zoom = 11;
+var minimum_zoom = 13;
 
 // alert to user when zoom too wide
 var alertMessage = 'Zoom is too wide, zoom in to see stop data';
@@ -20,35 +29,35 @@ var alertMessage = 'Zoom is too wide, zoom in to see stop data';
 var redIcon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
 var blueIcon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
 
+// array of markers to add to when police API called
+//var	stopMarkers = [];
+
+
 /*-----------------------------------------------------------------------------------------*/
 /* CONTROLLER */
 
 // Create a new map object in global scope (for access) and add to #map div
 var map = new google.maps.Map(document.getElementById('map'), initOptions);	
 
-// array of markers to add to
-var	stopMarkers = [];
-
-// create new search box object and assign to #searchbox <input>
+// create new search box object, assign it to #searchbox <input>,
+// and bias it towards current map bounds
 var input = document.getElementById('searchbox');
 var searchBox = new google.maps.places.SearchBox(input);
-
-// bias searchbox results towards current map bounds,
 map.addListener('bounds_changed', function() {
 	searchBox.setBounds(map.getBounds());
 });
 
-// listen for user entering a search
+// searchBox listens for user entering a search
 searchBox.addListener('places_changed', function() {
 
-	// when they do, getPlaces returns an array of possible matches
+	// when they do, getPlaces returns an array of possible place matches
 	var places = searchBox.getPlaces();
 
 	// select places[0] TODO: why? will this be correct every time?
 	// TODO: need error checking here. Maybe test if ...geometry.location exists
 	var place = places[0];		
 
-	// set viewport on selected place and zoom in
+	// set viewport on selected place and zoom in to street level
 	map.setCenter(place.geometry.location);
 	map.setZoom(streetZoom);
 
@@ -56,10 +65,10 @@ searchBox.addListener('places_changed', function() {
 	var searchMarker = addMarker(place.geometry.location, redIcon);	
 })
 
-// when bounds change (when user scrolls map OR when changed via search as above)...
+// map listens for boundaries being changed (when user scrolls map OR when changed via search as above)
 map.addListener('bounds_changed', function() {
 	
-	// ...query API, but not if map zoomed out too much - to prevent too many data	
+	// query API, but not if map zoomed out too much - to prevent too many data	
 	if (map.zoom <= minimum_zoom) {
 
 		// alert user
@@ -76,16 +85,19 @@ map.addListener('bounds_changed', function() {
 	}	
 })
 
+
+
+
 /*-------------FUNCTIONS------------------------------------------------*/
 
 function getStopsData() {
 	// clear previous stop markers to stop overloading
-	for (var i = 0; i < stopMarkers.length; i++) {
+	/*for (var i = 0; i < stopMarkers.length; i++) {
 		// remove map reference from each marker
     	stopMarkers[i].setMap(null);
-    } 
+    } */
     // clear array of markers altogether
-	stopMarkers = [];	
+	//stopMarkers = [];	
 
 	// get current bounds from getBounds object
 	var current_bounds = map.getBounds();
@@ -146,8 +158,11 @@ function addStopsMarkers(stops) {
 			lng: Number(stop.location.longitude)
 		};
 
+		// create marker
+		var stopMarker = addMarker(stopLocation, blueIcon);
+
 		// add each marker by pushing to array
-		stopMarkers.push(addMarker(stopLocation, blueIcon));
+		//stopMarkers.push(stopMarker);
 	}
 }
 
