@@ -30,9 +30,6 @@ var alertMessage = 'Zoom is too wide, zoom in to see more stop/search data';
 var redIcon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
 var blueIcon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
 
-// array of markers to add to when police API called
-var	stopMarkers = [];
-
 
 /*-----------------------------------------------------------------------------------------*/
 /* CONTROLLER */
