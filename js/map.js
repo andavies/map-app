@@ -12,7 +12,8 @@
 
 // initial options for map
 var initOptions = {
-	center : {lat : 53.328, lng: -3.101995},
+	// center on Liverpool
+	center : {lat : 53.41, lng: -2.99},
 	zoom : 15
 };
 
@@ -53,7 +54,8 @@ searchBox.addListener('places_changed', function() {
 	// when they do, getPlaces returns an array of possible place matches
 	var places = searchBox.getPlaces();
 
-	// select places[0] TODO: why? will this be correct every time?
+	// select places[0] 
+	// TODO: why? will this be correct every time?
 	// TODO: need error checking here. Maybe test if ...geometry.location exists
 	var place = places[0];		
 
@@ -65,8 +67,8 @@ searchBox.addListener('places_changed', function() {
 	var searchMarker = addMarker(place.geometry.location, redIcon);	
 })
 
-// map listens for boundaries being changed (when user scrolls map OR when changed via search as above)
-/* use 'idle' instead of 'bounds_changed'
+/* map listens for boundaries being changed (when user scrolls map OR when changed via search as above)
+   use 'idle' instead of 'bounds_changed'
    https://developers.google.com/maps/articles/toomanymarkers#viewportmarkermanagement */
 map.addListener('idle', function() {
 	
@@ -88,18 +90,9 @@ map.addListener('idle', function() {
 })
 
 
-
-
 /*-------------FUNCTIONS------------------------------------------------*/
 
 function getStopsData() {
-	// clear previous stop markers to stop overloading
-	/*for (var i = 0; i < stopMarkers.length; i++) {
-		// remove map reference from each marker
-    	stopMarkers[i].setMap(null);
-    } */
-    // clear array of markers altogether
-	//stopMarkers = [];	
 
 	// get current bounds from getBounds object
 	var current_bounds = map.getBounds();
@@ -107,10 +100,6 @@ function getStopsData() {
 	var min_lng = current_bounds.getSouthWest().lng();
 	var max_lat = current_bounds.getNorthEast().lat();
 	var max_lng = current_bounds.getNorthEast().lng();
-
-	/* TEST: add markers at boundary points
-	addMarker(current_bounds.getSouthWest(), blueIcon);
-	addMarker(current_bounds.getNorthEast(), blueIcon); */
 
 	// form search string for API request (https://data.police.uk/docs/method/stops-street/)
 	var poly_1 = min_lat.toString() + ',' + min_lng.toString() + ':';
@@ -160,8 +149,6 @@ function addMarker(location, icon, infoWindow) {
 function addStopsMarkers(stops) {
 	for (stop of stops) {
 		
-		// TODO: markerOptions.animation = google.maps.Animation.DROP;		
-
 		// convert coords returned by police.uk API into format required for google maps API
 		var stopLocation = {
 			lat : Number(stop.location.latitude), 
@@ -181,27 +168,11 @@ function addStopsMarkers(stops) {
 		   		+ '<p>' + 'Outcome: ' + stop.outcome + '</p>'
 		   	    + '</div>';
 
-		// test
-		//console.log(infoContent);
-
 		var infoWindow = new google.maps.InfoWindow({
 			content: infoContent
-		});
-
-		
+		});		
 
 		// create marker
 		var stopMarker = addMarker(stopLocation, blueIcon, infoWindow);
-
-		// add each marker by pushing to array
-		//stopMarkers.push(stopMarker);
 	}
 }
-
-
-
-
-
-
-
-
