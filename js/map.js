@@ -137,19 +137,21 @@ function getStopsData() {
 /*
  * adds a marker with specified icon at specified location
  */
-function addMarker(location, icon) {
+function addMarker(location, icon, infoWindow) {
 	var markerOptions = {
 		map : map,
 		position : location,
 		icon: icon
 	};
 
-	// animate marker if blue (therefore a stop)
-	/*if (icon === blueIcon) {
-		markerOptions.animation = google.maps.Animation.DROP;
-	}*/
+	var marker = new google.maps.Marker(markerOptions);
 
-	return new google.maps.Marker(markerOptions);	
+	// if infoWindow passed as argument, add listener
+	if (typeof infoWindow !== "undefined") {
+		marker.addListener('click', function() {
+			infoWindow.open(map, marker);
+		})	
+	}	
 }
 
 /*
@@ -166,8 +168,30 @@ function addStopsMarkers(stops) {
 			lng: Number(stop.location.longitude)
 		};
 
+		// add info window for each stop
+
+		// format date/time
+		var date = new Date(stop.datetime);
+		var formattedDate = date.toString();
+
+		var infoContent = "<div id='infowindow'>"
+				+ '<p>' + formattedDate + '</p>'
+		   		+ '<p>' + stop.legislation + '</p>'
+		   		+ '<p>' + stop.gender + ', ' + stop.age_range + ', ' + stop.self_defined_ethnicity + '</p>'
+		   		+ '<p>' + 'result: ' + stop.outcome + '</p>'
+		   	    + '</div>';
+
+		// test
+		//console.log(infoContent);
+
+		var infoWindow = new google.maps.InfoWindow({
+			content: infoContent
+		});
+
+		
+
 		// create marker
-		var stopMarker = addMarker(stopLocation, blueIcon);
+		var stopMarker = addMarker(stopLocation, blueIcon, infoWindow);
 
 		// add each marker by pushing to array
 		//stopMarkers.push(stopMarker);
