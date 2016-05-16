@@ -23,7 +23,7 @@ var streetZoom = 15
 var minimum_zoom = 13;
 
 // alert to user when zoom too wide
-var alertMessage = 'Zoom is too wide, zoom in to see stop data';
+var alertMessage = 'Zoom is too wide, zoom in to see more stop/search data';
 
 // color of icons
 var redIcon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
