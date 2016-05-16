@@ -172,13 +172,13 @@ function addStopsMarkers(stops) {
 
 		// format date/time
 		var date = new Date(stop.datetime);
-		var formattedDate = date.toString();
+		var formattedDate = date.toString().slice(0,21);
 
 		var infoContent = "<div id='infowindow'>"
-				+ '<p>' + formattedDate + '</p>'
-		   		+ '<p>' + stop.legislation + '</p>'
-		   		+ '<p>' + stop.gender + ', ' + stop.age_range + ', ' + stop.self_defined_ethnicity + '</p>'
-		   		+ '<p>' + 'result: ' + stop.outcome + '</p>'
+				+ '<p>' + 'Date: ' + formattedDate + '</p>'
+		   		+ '<p>' + 'Object of search: ' + stop.object_of_search + '</p>'
+		   		+ '<p>' + 'Subject: ' + stop.gender + ', ' + stop.age_range + ', ' + stop.officer_defined_ethnicity + '</p>'
+		   		+ '<p>' + 'Outcome: ' + stop.outcome + '</p>'
 		   	    + '</div>';
 
 		// test
