@@ -27,8 +27,8 @@ var minimum_zoom = 13;
 var alertMessage = 'Zoom is too wide, zoom in to see more stop/search data';
 
 // color of icons
-var redIcon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
-var blueIcon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+var redIcon = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png';
+var blueIcon = 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png';
 
 
 /*-----------------------------------------------------------------------------------------*/
